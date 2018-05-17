@@ -1,0 +1,83 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nebulas unofficial faucet</title>
+    <link rel="stylesheet" href="css/app.css">
+  </head>
+  <body>
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="large-12 cell">
+          <h1>Nebulas unofficial faucet</h1>
+        </div>
+      </div>
+
+      <div class="grid-x grid-padding-x">
+        <div class="large-8 medium-8 cell">
+
+            <p>The purpose of this service is to provide all developers with a small amount of NAS, required to deploy and use smart contracts. Due to the extremely low comissions on Nebulas network (right now you can make at least 20 000 000 tranasctions, paying only 1 NAS as gas fees, which is roughly 8 USD), amount required for starting to develop application is quite low.</p>
+            <p>You can register Nebulas mainnet address (starting from "n1") using the official web-wallet. For your convenience, if you don't want, or don't know how to mess with github, i have created a local copy here, but i encourage you do not trust anyone and use only official wallets from github.</p>
+            <p>Please input your wallet address into field below, write a nice comment to me and hit the button. In a minute you will receive 0.0001 NAS. This is enough for deploying around 1000 smart contracts or make 5000 transactions. The market price of this transfer is less than 0.1 cent, so i hope you won't be an asshole and abuse it.</p>
+            <p>Please note, that i will not send NAS to wallets which already has some NAS on a balance. It is just a helping tool for developers to learn how to make DApps, not the free money or something. For free money please go to Nebulas Incentive program, make a simple smart-contract and receive 100 NAS from them.</p>
+
+        </div>
+
+        <div class="large-4 medium-4 cell">
+          <div class="primary callout">
+            <label>Your NAS wallet:</label>
+            <input id="nasWallet" type="text" placeholder="n1SDJ7KJBZa2ojoBUTvGiVzbfDNasAppJRE">
+
+            <label>Your comment:</label>
+            <input id="comment" type="text" placeholder="n1SDJ7KJBZa2ojoBUTvGiVzbfDNasAppJRE">
+
+            <div id="responsePlace"></div>
+
+            <button onclick="javascript:sendRequest();" class="button">Request for 0.0001 NAS</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        function sendRequest(){
+
+            let faucetURL = 'https://faucet.nebulas.ru/faucet/';
+            let walletAddress = document.getElementById('nasWallet').value;
+            let goodComment = document.getElementById('comment').value;
+
+            if (!goodComment){
+                alert('Please, write me something pleasant in your comment!');
+                return false;
+            }
+
+            let requestObject = {
+                'address': walletAddress,
+                'commentary': goodComment
+            };
+
+            document.getElementById('responsePlace').innerHTML = "Working, please wait...";
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', faucetURL);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function(){
+                // Не нужно ничего городить, достаточно просто уведомления.
+                if(this.status === 200){
+                    document.getElementById('responsePlace').innerHTML = this.responseText;
+                }
+                else {
+                    document.getElementById('responsePlace').innerHTML = '<span style="color: red">' + this.responseText + '</span>';
+                }
+
+                // alert((this.status === 200 ? '' : this.status + ' ERROR: ') + this.responseText);
+            };
+            xhr.send(JSON.stringify(requestObject));
+
+        }
+    </script>
+
+  </body>
+</html>
